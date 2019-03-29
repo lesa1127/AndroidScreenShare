@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg"
+    android:orientation="vertical"
+    tools:context=".SettingParam">
+
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/app_input_width"
+        android:textColor="@android:color/background_light" />
+
+    <EditText
+        android:id="@+id/setting_editText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/editsharp"
+        android:ems="10"
+        android:inputType="number"
+        android:text="1920"
+        android:textColor="@android:color/background_light"
+        android:textColorLink="@android:color/background_light" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:textColor="@android:color/background_light"
+        android:text="@string/app_input_height" />
+
+    <EditText
+        android:id="@+id/setting_editText3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/editsharp"
+        android:layout_marginRight="10dp"
+        android:textColor="@android:color/background_light"
+        android:ems="10"
+        android:textColorLink="@android:color/background_light"
+        android:inputType="number"
+        android:text="1080" />
+
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/background_light"
+        android:layout_marginLeft="5dp"
+        android:text="@string/app_input_bytereat" />
+
+    <EditText
+        android:id="@+id/setting_editText4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:ems="10"
+        android:textColor="@android:color/background_light"
+        android:textColorLink="@android:color/background_light"
+        android:inputType="number"
+        android:background="@drawable/editsharp"
+        android:text="16777216" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="5dp"
+        android:textColor="@android:color/background_light"
+        android:text="@string/app_input_fps" />
+
+    <EditText
+        android:id="@+id/setting_editText5"
+        android:layout_width="match_parent"
+        android:textColor="@android:color/background_light"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:ems="10"
+        android:textColorLink="@android:color/background_light"
+        android:inputType="number"
+        android:background="@drawable/editsharp"
+        android:text="24" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/background_light"
+        android:layout_marginLeft="5dp"
+        android:text="@string/app_input_numchannle" />
+
+    <EditText
+        android:id="@+id/setting_editText6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:textColor="@android:color/background_light"
+        android:ems="10"
+        android:textColorLink="@android:color/background_light"
+        android:inputType="number"
+        android:background="@drawable/editsharp"
+        android:text="1" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/background_light"
+        android:layout_marginLeft="5dp"
+        android:text="@string/app_input_byterate" />
+
+    <EditText
+        android:id="@+id/setting_editText7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@android:color/background_light"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:ems="10"
+        android:textColorLink="@android:color/background_light"
+        android:inputType="number"
+        android:background="@drawable/editsharp"
+        android:text="384000" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="bottom"
+        android:textColor="@android:color/background_light"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/setting_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/editsharp1"
+            android:onClick="onClick"
+            android:text="@string/app_but_save_setting" />
+    </LinearLayout>
+
+</LinearLayout>

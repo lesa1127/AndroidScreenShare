@@ -1,0 +1,13 @@
+先完成一个我想要的播放器 (远程播放项目)
+https://blog.csdn.net/kgdwbb/article/details/74261693
+https://blog.csdn.net/lory17/article/details/61916351
+https://www.jianshu.com/p/9813195f89af Android使用MediaCodec将YUV硬编成H264
+https://blog.csdn.net/zgcqflqinhao/article/details/53257358 android下实时传输h264并播放
+接下来把两个项目合并 把 yuv 编码器提取出来 把AndroidScan.git 的屏幕扫描线程提取出来 重写网络部分 , 编码部分 ,本地数据存储部分 彻底放弃原生存储框架
+https://blog.csdn.net/zgcqflqinhao/article/details/53257358
+先测试编码能力 导出到本地 然后 本地显示 解读帧
+https://blog.csdn.net/xiao5678yun/article/details/77775104 内录音
+https://blog.csdn.net/qq_34161388/article/details/75337502 aac 流编码
+https://blog.csdn.net/a512337862/article/details/72629755 aac 解码
+关于音频视频同步方法  。。。 创建一个Unix时间戳 标记帧  buff缓冲 同步时间戳
+mmp .... 无法录制系统内声音 安卓不允许需要root ............

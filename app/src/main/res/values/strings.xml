@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">屏幕共享</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="app_but_shar">开始分享</string>
+    <string name="app_but_rec">设定参数</string>
+
+    <string name="title_activity_watch_contect">WatchContect</string>
+
+    <string name="app_but_share">点我分享</string>
+    <string name="app_but_watch">加入围观</string>
+
+    <string name="app_but_stop">点击终止</string>
+    <string name="app_but_save_setting">保存设置</string>
+
+    <string name="app_input_width">视频宽度</string>
+    <string name="app_input_height">视频高度</string>
+    <string name="app_input_bytereat">视频码率(单位字节)</string>
+    <string name="app_input_fps">视频帧率</string>
+    <string name="app_input_numchannle">声道数</string>
+    <string name="app_input_simplerate">采样频率</string>
+    <string name="app_input_byterate">编码率</string>
+    
+    <string name="app_input_address">请输入要连接的IP地址</string>
+
+    <string name="app_but_ok">确认</string>
+    <string name="app_but_cancle">取消</string>
+
+    <string name="app_back_exit">再按一次退出程序！</string>
+
+    <string name="app_title_runing">正在运行</string>
+
+</resources>
