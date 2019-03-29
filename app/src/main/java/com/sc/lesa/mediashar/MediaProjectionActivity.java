@@ -30,44 +30,26 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.strat_server_activity);
         init();
-
-
     }
 
     @Override
     protected void onResume() {
-        Intent intent = new Intent(this,MediaReaderService.class);
-        bindService(intent,myServiceConnection,Context.BIND_AUTO_CREATE);
+        reLoadUI();
         super.onResume();
     }
 
     @Override
-    protected void onPause() {
-        try {
-            unbindService(myServiceConnection);
-        }catch (Throwable e){
-            e.printStackTrace();
-        }
-        super.onPause();
-    }
-    @Override
     protected void onRestart() {
-        Intent intent = new Intent(this,MediaReaderService.class);
-        bindService(intent,myServiceConnection,Context.BIND_AUTO_CREATE);
+        reLoadUI();
         super.onRestart();
     }
-    @Override
-    protected void onStop() {
-        try {
-            unbindService(myServiceConnection);
-        }catch (Throwable e){
-            e.printStackTrace();
-        }
-        super.onStop();
+
+    private void reLoadUI(){
+        Intent intent = new Intent(this,MediaReaderService.class);
+        bindService(intent,new MyServiceConnectionUI(this),Context.BIND_AUTO_CREATE);
     }
 
     @Override
@@ -103,9 +85,6 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
 
     }
 
-
-
-
     private void init() {
         if(Build.VERSION.SDK_INT >= 21) {
             View decorView = getWindow().getDecorView();
@@ -132,6 +111,8 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
         myServiceConnection = new MyServiceConnection(this);
         Intent intent = new Intent(this,MediaReaderService.class);
         bindService(intent,myServiceConnection,Context.BIND_AUTO_CREATE);
+
+        reLoadUI();
     }
 
     public static final int REQUEST_MEDIA_PROJECTION = 18;
@@ -167,6 +148,8 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
                     this.mediaProjection=mediaProjection;
                     onResultCode();
 
+                    buttonstart.setText(R.string.app_but_stop);
+                    buttonstart.setEnabled(true);
                 }else {
                     buttonstart.setText(R.string.app_but_shar);
                     buttonstart.setEnabled(true);
@@ -179,47 +162,38 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
     public void  onResultCode(){
 
         Intent intent = new Intent(this,MediaReaderService.class);
+        bindService(intent,myServiceConnection,Context.BIND_AUTO_CREATE);
         MediaReaderService.startServer(intent,this.mediaProjection);
         startService(intent);
-
-        buttonstart.setText(R.string.app_but_stop);
-        buttonstart.setEnabled(true);
-
     }
 
-    private class MyServiceConnection implements ServiceConnection{
-
+    private class MyServiceConnectionUI implements ServiceConnection{
         MediaProjectionActivity mediaProjectionActivity;
         MediaReaderService.MyBinder myBinder;
 
-        public MyServiceConnection(MediaProjectionActivity context){
+        public MyServiceConnectionUI(MediaProjectionActivity context){
             this.mediaProjectionActivity=context;
         }
 
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            myBinder=(MediaReaderService.MyBinder) service;
-
-            SharedPreferences sharedPreferences = mediaProjectionActivity.getSharedPreferences(
-                    "videoparm",Context.MODE_PRIVATE);
-            int localwidth=sharedPreferences.getInt("width",mediaProjectionActivity.width);
-            int localheight=sharedPreferences.getInt("height",mediaProjectionActivity.heght);
-            int videoBitrate=sharedPreferences.getInt("videoBitrate",16777216);
-            int videoFrameRate=sharedPreferences.getInt("videoFrameRate",24);
-
-            myBinder.setVideoParam(localwidth,localheight,
-                    videoBitrate,videoFrameRate);
-
+        void reloadUI(){
             if (myBinder.getServerStatus()) {
                 mediaProjectionActivity.buttonstart.setText(R.string.app_but_stop);
             }else {
                 mediaProjectionActivity.buttonstart.setText(R.string.app_but_shar);
             }
             mediaProjectionActivity.buttonstart.setEnabled(true);
-
-
         }
 
+        void unBind(){
+            mediaProjectionActivity.unbindService(this);
+        }
+
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            myBinder=(MediaReaderService.MyBinder) service;
+            reloadUI();
+            unBind();
+        }
         @Override
         public void onServiceDisconnected(ComponentName name) {
 
@@ -234,13 +208,50 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
         public void onNullBinding(ComponentName name) {
 
         }
+    }
 
+    private class MyServiceConnection implements ServiceConnection{
+
+        MediaProjectionActivity mediaProjectionActivity;
+        MediaReaderService.MyBinder myBinder;
+
+        public MyServiceConnection(MediaProjectionActivity context){
+            this.mediaProjectionActivity=context;
+        }
+
+        void setParam(){
+            SharedPreferences sharedPreferences = mediaProjectionActivity.getSharedPreferences(
+                    "videoparm",Context.MODE_PRIVATE);
+            int localwidth=sharedPreferences.getInt("width",mediaProjectionActivity.width);
+            int localheight=sharedPreferences.getInt("height",mediaProjectionActivity.heght);
+            int videoBitrate=sharedPreferences.getInt("videoBitrate",16777216);
+            int videoFrameRate=sharedPreferences.getInt("videoFrameRate",24);
+
+            myBinder.setVideoParam(localwidth,localheight,
+                    videoBitrate,videoFrameRate);
+        }
         public void closeServer(){
             myBinder.stopServer();
         }
 
-        public boolean getServerStatus(){
-            return myBinder.getServerStatus();
+        @Override
+        public void onServiceConnected(ComponentName name, IBinder service) {
+            myBinder=(MediaReaderService.MyBinder) service;
+            setParam();
+        }
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+
+        }
+
+        @Override
+        public void onBindingDied(ComponentName name) {
+
+        }
+
+        @Override
+        public void onNullBinding(ComponentName name) {
+
         }
 
     }

@@ -79,6 +79,7 @@ public class MediaReaderService extends Service {
 		voiceSender.exit();
 		socketServerThread.exit();
 		handler.exit();
+		deleteNotification();
 		serverFlag=false;
 	}
 
@@ -108,7 +109,6 @@ public class MediaReaderService extends Service {
 	@Override
 	public void onDestroy() {
 		Log.d(TAG, "onDestroy()");
-		deleteNotification();
 		super.onDestroy();
 	}
 
