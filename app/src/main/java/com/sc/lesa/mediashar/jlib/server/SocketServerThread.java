@@ -68,6 +68,8 @@ public class SocketServerThread extends Thread {
                     }
 
                 }
+                dataOutput.close();
+                serverSocket.close();
 
             } catch (IOException e) {
                 e.printStackTrace();

@@ -55,6 +55,7 @@ public class SocketClientThread extends Thread {
                         continue;
                     }
                 }
+                dataInput.close();
 
             } catch (IOException e) {
                 e.printStackTrace();
