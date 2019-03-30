@@ -7,10 +7,9 @@
     tools:context=".MediaProjectionActivity">
 
 
-    <LinearLayout
+    <com.sc.lesa.mediashar.view.MyLineLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@mipmap/bg"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -37,5 +36,5 @@
             android:textSize="18sp"
             android:text="@string/app_but_rec" />
 
-    </LinearLayout>
+    </com.sc.lesa.mediashar.view.MyLineLayout>
 </FrameLayout>
