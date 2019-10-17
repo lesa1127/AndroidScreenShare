@@ -7,16 +7,16 @@ import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
-public class ByteObjectOutPutStream {
+public class ByteObjectOutputStream {
     byte breaking;
     OutputStream outputStream;
     BufferedOutputStream bufferedOutputStream;
 
-    public ByteObjectOutPutStream(OutputStream o){
+    public ByteObjectOutputStream(OutputStream o){
         this(o, (byte) 0x8f);
     }
 
-    public ByteObjectOutPutStream(OutputStream outputStream,byte breaking){
+    public ByteObjectOutputStream(OutputStream outputStream, byte breaking){
         this.breaking=breaking;
         this.outputStream=outputStream;
         bufferedOutputStream = new BufferedOutputStream(outputStream);
@@ -30,7 +30,7 @@ public class ByteObjectOutPutStream {
         byte[] crctmp = new byte[len];
         System.arraycopy(bytes,offset,crctmp,0,len);
 
-        int crcCode =CRC.getIntCRC(crctmp);
+        int crcCode = CRC.getIntCRC(crctmp);
         crctmp=new byte[len+4];
         System.arraycopy(CombinValue.intToByte(crcCode),0,crctmp,0,4);
         System.arraycopy(bytes,offset,crctmp,4,len);

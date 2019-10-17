@@ -14,9 +14,6 @@ public class ByteObjectInputStream {
     InputStream inputStream;
     BufferedInputStream bufferedInputStream;
 
-    private int lastDataLen=0;
-    private byte[] lastByteArray=new byte[8193];
-
     public ByteObjectInputStream(InputStream i){
         this(i,(byte) 0x8f);
     }
@@ -40,7 +37,7 @@ public class ByteObjectInputStream {
                 } else if (two == 0) {
                     return checkCrc(byteArrayOutputStream.toByteArray());
                 }else {
-                    System.out.println("其他 转义"+two);
+                    System.out.println("Other Data"+two);
                 }
 
             } else {
@@ -58,7 +55,7 @@ public class ByteObjectInputStream {
         if (CRC.getIntCRC(tmp)==crcCode){
             return tmp;
         }else {
-            throw new IOException("crc code erreing");
+            throw new IOException("Crc Code Error");
         }
     }
 

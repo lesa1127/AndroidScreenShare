@@ -2,7 +2,7 @@ package com.sc.lesa.mediashar.jlib.server;
 
 import android.util.Log;
 
-import com.sc.lesa.mediashar.jlib.io.ByteObjectOutPutStream;
+import com.sc.lesa.mediashar.jlib.io.ByteObjectOutputStream;
 
 import com.sc.lesa.mediashar.jlib.io.StreamData;
 import com.sc.lesa.mediashar.jlib.io.Writable;
@@ -32,7 +32,7 @@ public class SocketServerThread extends Thread {
 
     Socket socket;
     OutputStream socketout;
-    ByteObjectOutPutStream dataOutput;
+    ByteObjectOutputStream dataOutput;
     @Override
     public void run() {
         init();
@@ -44,7 +44,7 @@ public class SocketServerThread extends Thread {
                 if (socket==null)break;
                 Log.d(TAG,"client connected");
                 socketout = socket.getOutputStream();
-                dataOutput = new ByteObjectOutPutStream(socketout);
+                dataOutput = new ByteObjectOutputStream(socketout);
                 while (!exit){
                     Writable video = bufferListVideo.lastValue();
                     if (video!=null){
