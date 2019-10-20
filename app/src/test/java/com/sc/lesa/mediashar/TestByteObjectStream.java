@@ -1,6 +1,6 @@
 package com.sc.lesa.mediashar;
 import com.sc.lesa.mediashar.jlib.io.ByteObjectInputStream;
-import com.sc.lesa.mediashar.jlib.io.ByteObjectOutPutStream;
+import com.sc.lesa.mediashar.jlib.io.ByteObjectOutputStream;
 
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ public class TestByteObjectStream {
     @Test
     public void testOutPutStream(){
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ByteObjectOutPutStream objectOutPutStream = new ByteObjectOutPutStream(outputStream);
+        ByteObjectOutputStream objectOutPutStream = new ByteObjectOutputStream(outputStream);
 
         byte[] object = new byte[]{1,2,3,4,(byte) 0x8f,5,6,7,8};
 
@@ -35,7 +35,7 @@ public class TestByteObjectStream {
     @Test
     public void testInputStream(){
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ByteObjectOutPutStream objectOutPutStream = new ByteObjectOutPutStream(outputStream);
+        ByteObjectOutputStream objectOutPutStream = new ByteObjectOutputStream(outputStream);
 
         byte[] object = new byte[]{1,2,3,4,(byte) 0x8f,5,6,7,8};
 
@@ -73,7 +73,7 @@ public class TestByteObjectStream {
     @Test
     public void testInputStream2(){
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-        ByteObjectOutPutStream objectOutPutStream = new ByteObjectOutPutStream(outputStream);
+        ByteObjectOutputStream objectOutPutStream = new ByteObjectOutputStream(outputStream);
 
 
 

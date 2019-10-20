@@ -49,7 +49,7 @@ public class SettingParam extends AppCompatActivity implements View.OnClickListe
         config = Config.Companion.getConfig(this);
 
         editText_Width.setText(""+config.getWidth());
-        editText_Height.setText(""+config.getWidth());
+        editText_Height.setText(""+config.getHeight());
         editText_VideoBitrate.setText(""+config.getVideoBitrate());
         editText_VideoFrameRate.setText(""+config.getVideoFrameRate());
         editText_ChannelCount.setText(""+config.getChannelCount());
@@ -67,15 +67,6 @@ public class SettingParam extends AppCompatActivity implements View.OnClickListe
             config.setVoiceByteRate(Integer.parseInt(editText_ByteRate.getText().toString()));
             config.setChannelMode(config.getChannelCount()==1?AudioFormat.CHANNEL_IN_MONO:AudioFormat.CHANNEL_IN_STEREO);
 
-
-            VideoSender.setParam(this,
-                    config.getWidth(),config.getHeight(),
-                    config.getVideoBitrate(),config.getVideoFrameRate());
-
-            VoiceSender.setParam(this,
-                    config.getChannelMode(),config.getEncodeFormat(),
-                    config.getChannelCount(),config.getVoiceByteRate(),
-                    config.getVoiceSampleRate());
         }
     }
 }

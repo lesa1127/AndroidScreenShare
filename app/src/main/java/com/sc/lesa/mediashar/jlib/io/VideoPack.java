@@ -14,8 +14,9 @@ public class VideoPack implements Writable{
     public VideoPack(){}
 
     public VideoPack(byte[] bytes) throws IOException {
-        DataInput input = StreamData.buildDataInput(bytes);
+        DataInputStreamBuffer input = new DataInputStreamBuffer(bytes);
         readFields(input);
+        input.close();
     }
 
     public VideoPack(byte[] frames , int width, int height,int videoBitrate, int videoFrameRate,

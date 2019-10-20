@@ -8,7 +8,6 @@ import android.util.Log;
 
 
 import com.sc.lesa.mediashar.jlib.io.ByteObjectInputStream;
-import com.sc.lesa.mediashar.jlib.io.StreamData;
 import com.sc.lesa.mediashar.jlib.io.VoicePack;
 import com.sc.lesa.mediashar.jlib.server.SocketServerThread;
 import com.sc.lesa.mediashar.jlib.util.CombinValue;

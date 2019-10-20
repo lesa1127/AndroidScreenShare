@@ -16,7 +16,7 @@ import java.net.SocketAddress;
 public class SocketClientThread extends Thread {
     final String TAG = SocketClientThread.class.getName();
 
-    Classifier classifier = new Classifier();
+    DataPackList dataPackList = new DataPackList();
 
     private Socket client;
     private boolean exit;
@@ -35,8 +35,8 @@ public class SocketClientThread extends Thread {
         Log.d(TAG,"连接成功");
     }
 
-    public Classifier getClassifier() {
-        return classifier;
+    public DataPackList getDataPackList() {
+        return dataPackList;
     }
 
     @Override
@@ -49,7 +49,7 @@ public class SocketClientThread extends Thread {
                     byte[] bytes = null;
                     try {
                         bytes = dataInput.readObject();
-                        classifier.putDataPack(bytes);
+                        dataPackList.putDataPack(bytes);
                     }catch (Throwable e){
                         e.printStackTrace();
                         continue;
@@ -57,7 +57,7 @@ public class SocketClientThread extends Thread {
                 }
                 dataInput.close();
 
-            } catch (IOException e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
             }finally {
                 try {
@@ -75,10 +75,6 @@ public class SocketClientThread extends Thread {
 
     public void exit(){
         exit=true;
-        try {
-            client.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        super.interrupt();
     }
 }

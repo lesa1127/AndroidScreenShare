@@ -7,19 +7,19 @@ import android.util.Log;
 import com.sc.lesa.mediashar.jlib.io.VoicePack;
 import com.sc.lesa.mediashar.jlib.media.AACDecoder;
 import com.sc.lesa.mediashar.jlib.media.MyAudioTrack;
-import com.sc.lesa.mediashar.jlib.server.Classifier;
+import com.sc.lesa.mediashar.jlib.server.DataPackList;
 
 public class VoicePlayThread extends Thread implements AACDecoder.OnDecodeDone {
     public final static String TAG = VoicePlayThread.class.getName();
 
     boolean exit;
-    Classifier inputdata ;
+    DataPackList inputdata ;
     AACDecoder aacDecoder;
     MyAudioTrack myAudioTrack;
     boolean hasInitVoice;
 
-    public VoicePlayThread(Classifier classifier){
-        this.inputdata=classifier;
+    public VoicePlayThread(DataPackList dataPackList){
+        this.inputdata=dataPackList;
     }
 
     private void initVoiceDecoder(int ChannelMode,int EncodeFormat,int ChannelCount,

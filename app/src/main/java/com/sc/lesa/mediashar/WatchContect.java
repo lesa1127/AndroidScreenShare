@@ -116,9 +116,9 @@ public class WatchContect extends AppCompatActivity {
                     return;
                 }
                 socketClientThread.start();
-                mdiaPlayThread=new VideoPlayThread(mSurfaceHolder.getSurface(),socketClientThread.getClassifier());
+                mdiaPlayThread=new VideoPlayThread(mSurfaceHolder.getSurface(),socketClientThread.getDataPackList());
                 mdiaPlayThread.start();
-                voicePlayThread = new VoicePlayThread(socketClientThread.getClassifier());
+                voicePlayThread = new VoicePlayThread(socketClientThread.getDataPackList());
                 voicePlayThread.start();
             }
         };

@@ -4,7 +4,8 @@ import android.util.Log;
 
 import com.sc.lesa.mediashar.jlib.io.ByteObjectOutputStream;
 
-import com.sc.lesa.mediashar.jlib.io.StreamData;
+import com.sc.lesa.mediashar.jlib.io.DataOutputStreamBuffer;
+
 import com.sc.lesa.mediashar.jlib.io.Writable;
 import com.sc.lesa.mediashar.jlib.util.BufferList;
 import com.sc.lesa.mediashar.jlib.util.TempBufferList;
@@ -35,23 +36,24 @@ public class SocketServerThread extends Thread {
     ByteObjectOutputStream dataOutput;
     @Override
     public void run() {
-        init();
+        try {
+            serverSocket = new ServerSocket(port);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         if (serverSocket == null )return;
         while (!exit){
             try {
-                if (exit)break;
                 socket =serverSocket.accept();
-                if (socket==null)break;
                 Log.d(TAG,"client connected");
                 socketout = socket.getOutputStream();
                 dataOutput = new ByteObjectOutputStream(socketout);
                 while (!exit){
                     Writable video = bufferListVideo.lastValue();
                     if (video!=null){
-                        StreamData streamData =new StreamData();
-                        video.write(streamData.getDataOutput());
-                        byte[] tmp = Classifier.buildVideoData(streamData.getBytes());
+                        byte[] tmp = DataPackList.Companion.buildVideoPack(video);
                         dataOutput.writeObject(tmp);
+
                         Log.d(TAG, "has send video pack");
 
 
@@ -59,19 +61,17 @@ public class SocketServerThread extends Thread {
 
                     Writable voice = bufferListVoice.lastValue();
                     if (voice!=null){
-                        StreamData streamData =new StreamData();
-                        voice.write(streamData.getDataOutput());
-                        byte[] tmp = Classifier.buildVioceData(streamData.getBytes());
+                        byte[] tmp = DataPackList.Companion.buildVoicePack(voice);
                         dataOutput.writeObject(tmp);
+
                         Log.d(TAG, "has send voice pack");
 
                     }
 
                 }
                 dataOutput.close();
-                serverSocket.close();
 
-            } catch (IOException e) {
+            } catch (Throwable e) {
                 e.printStackTrace();
             }
             finally {
@@ -90,20 +90,15 @@ public class SocketServerThread extends Thread {
     }
 
     public void putVoicePack(Writable writable){
+        if (bufferListVoice.size()<100)
         this.bufferListVoice.push(writable);
     }
 
     public void putVideoPack(Writable writable){
-        this.bufferListVideo.push(writable);
+        if (bufferListVideo.size()<100)
+            this.bufferListVideo.push(writable);
     }
 
-    private void init(){
-        try {
-            serverSocket = new ServerSocket(port);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
     private void close(){
         if (serverSocket!=null){
             try {
@@ -117,12 +112,8 @@ public class SocketServerThread extends Thread {
     }
 
     public void exit() {
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         Log.d(TAG,"退出中");
         this.exit = true;
+        super.interrupt();
     }
 }

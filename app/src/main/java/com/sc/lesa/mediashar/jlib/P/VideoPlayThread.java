@@ -6,7 +6,7 @@ import android.view.Surface;
 import com.sc.lesa.mediashar.jlib.io.VideoPack;
 
 import com.sc.lesa.mediashar.jlib.media.Decoder;
-import com.sc.lesa.mediashar.jlib.server.Classifier;
+import com.sc.lesa.mediashar.jlib.server.DataPackList;
 
 
 public class VideoPlayThread extends Thread {
@@ -15,13 +15,13 @@ public class VideoPlayThread extends Thread {
     Surface surface;
     boolean hasInitVideo;
 
-    Classifier inputdata ;
+    DataPackList inputdata ;
     Decoder videodecoder;
 
 
-    public VideoPlayThread(Surface surface,Classifier classifier){
+    public VideoPlayThread(Surface surface,DataPackList dataPackList){
         this.surface=surface;
-        this.inputdata=classifier;
+        this.inputdata=dataPackList;
     }
 
     private void initVideoDecoder(int width,int height,int videoBitrate,int videoFrameRate){

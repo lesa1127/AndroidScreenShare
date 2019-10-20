@@ -14,8 +14,9 @@ public class VoicePack implements Writable {
     public VoicePack(){}
 
     public VoicePack(byte[] bytes) throws IOException {
-        DataInput input = StreamData.buildDataInput(bytes);
+        DataInputStreamBuffer input = new DataInputStreamBuffer(bytes);
         readFields(input);
+        input.close();
     }
 
     public VoicePack(int ChannelMode,int EncodeFormat,int ChannelCount,

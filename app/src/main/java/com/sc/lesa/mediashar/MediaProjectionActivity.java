@@ -1,11 +1,9 @@
 package com.sc.lesa.mediashar;
 
-
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.media.projection.MediaProjection;
 import android.media.projection.MediaProjectionManager;
@@ -16,14 +14,17 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 
 public class MediaProjectionActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private MediaProjection mediaProjection=null;
-    private  int width,heght;
     MyServiceConnection myServiceConnection;
 
     Button buttonstart;
@@ -33,56 +34,6 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.strat_server_activity);
         init();
-    }
-
-    @Override
-    protected void onResume() {
-        reLoadUI();
-        super.onResume();
-    }
-
-    @Override
-    protected void onRestart() {
-        reLoadUI();
-        super.onRestart();
-    }
-
-    private void reLoadUI(){
-        Intent intent = new Intent(this,MediaReaderService.class);
-        bindService(intent,new MyServiceConnectionUI(this),Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    public void onClick(View v) {
-        if (v.getId()==R.id.but_server_start){
-            Button button = (Button) v;
-            if (button.getText().toString().equals(getString(R.string.app_but_shar))) {
-                buttonstart.setEnabled(false);
-                try {
-                    requestCapturePermission();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-            }
-            else {
-                myServiceConnection.closeServer();
-                button.setText(R.string.app_but_shar);
-                try {
-                    unbindService(myServiceConnection);
-                }catch (Throwable e){
-                    e.printStackTrace();
-                }
-                stopService(new Intent(this,MediaReaderService.class));
-            }
-
-
-        }
-        else if (v.getId()== R.id.but_server_setting){
-            Intent intent =new Intent(this,SettingParam.class);
-            startActivity(intent);
-        }
-
     }
 
     private void init() {
@@ -105,15 +56,81 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
         getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
-        this.width = width;
-        this.heght = height;
+
+        Config config = Config.Companion.getConfig(this);
+        config.setWidth(width);
+        config.setHeight(height);
+        Config.Companion.saveConfig(this,config);
 
         myServiceConnection = new MyServiceConnection(this);
         Intent intent = new Intent(this,MediaReaderService.class);
         bindService(intent,myServiceConnection,Context.BIND_AUTO_CREATE);
-
-        reLoadUI();
+        myServiceConnection.reloadUI();
     }
+
+    @Override
+    protected void onResume() {
+        myServiceConnection.reloadUI();
+        super.onResume();
+    }
+
+    @Override
+    protected void onRestart() {
+        myServiceConnection.reloadUI();
+        super.onRestart();
+    }
+
+
+
+    @Override
+    public void onClick(View v) {
+        if (v.getId()==R.id.but_server_start){
+            Button button = (Button) v;
+            if (button.getText().toString().equals(getString(R.string.app_but_shar))) {
+                buttonstart.setEnabled(false);
+                try {
+                    requestCapturePermission();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+            else {
+                myServiceConnection.stopShare();
+                button.setText(R.string.app_but_shar);
+                try {
+                    unbindService(myServiceConnection);
+                }catch (Throwable e){
+                    e.printStackTrace();
+                }
+                stopService(new Intent(this,MediaReaderService.class));
+            }
+
+
+        }
+        else if (v.getId()== R.id.but_server_setting){
+            Intent intent =new Intent(this,SettingParam.class);
+            startActivity(intent);
+        }
+
+    }
+
+    long preTime;
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            long currentTime = new Date().getTime();
+            if ((currentTime - preTime) > 2000) {
+                Toast.makeText(this, getText(R.string.app_back_exit), Toast.LENGTH_SHORT).show();
+                preTime = currentTime;
+                return true;
+            }
+
+            myServiceConnection.unBind();
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
 
     public static final int REQUEST_MEDIA_PROJECTION = 18;
     MediaProjectionManager mediaProjectionManager;
@@ -129,7 +146,6 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
             throw new Exception("android版本低于5.0");
         }
         return;
-
     }
 
     @Override
@@ -145,7 +161,7 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
                         Log.e("@@", "media projection is null");
                         return;
                     }
-                    this.mediaProjection=mediaProjection;
+                    MyApplication.setMediaProjection(mediaProjection);
                     onResultCode();
 
                     buttonstart.setText(R.string.app_but_stop);
@@ -160,88 +176,80 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
     }
 
     public void  onResultCode(){
-
-        Intent intent = new Intent(this,MediaReaderService.class);
-        bindService(intent,myServiceConnection,Context.BIND_AUTO_CREATE);
-        MediaReaderService.startServer(intent,this.mediaProjection);
-        startService(intent);
-    }
-
-    private class MyServiceConnectionUI implements ServiceConnection{
-        MediaProjectionActivity mediaProjectionActivity;
-        MediaReaderService.MyBinder myBinder;
-
-        public MyServiceConnectionUI(MediaProjectionActivity context){
-            this.mediaProjectionActivity=context;
-        }
-
-        void reloadUI(){
-            if (myBinder.getServerStatus()) {
-                mediaProjectionActivity.buttonstart.setText(R.string.app_but_stop);
-            }else {
-                mediaProjectionActivity.buttonstart.setText(R.string.app_but_shar);
-            }
-            mediaProjectionActivity.buttonstart.setEnabled(true);
-        }
-
-        void unBind(){
-            mediaProjectionActivity.unbindService(this);
-        }
-
-        @Override
-        public void onServiceConnected(ComponentName name, IBinder service) {
-            myBinder=(MediaReaderService.MyBinder) service;
-            reloadUI();
-            unBind();
-        }
-        @Override
-        public void onServiceDisconnected(ComponentName name) {
-
-        }
-
-        @Override
-        public void onBindingDied(ComponentName name) {
-
-        }
-
-        @Override
-        public void onNullBinding(ComponentName name) {
-
-        }
+        myServiceConnection.startShare();
     }
 
     private class MyServiceConnection implements ServiceConnection{
-
+        boolean isConnect=false;
         MediaProjectionActivity mediaProjectionActivity;
         MediaReaderService.MyBinder myBinder;
+        ArrayList<Runnable> task = new ArrayList<Runnable>();
 
         public MyServiceConnection(MediaProjectionActivity context){
             this.mediaProjectionActivity=context;
         }
 
-        void setParam(){
-            SharedPreferences sharedPreferences = mediaProjectionActivity.getSharedPreferences(
-                    "videoparm",Context.MODE_PRIVATE);
-            int localwidth=sharedPreferences.getInt("width",mediaProjectionActivity.width);
-            int localheight=sharedPreferences.getInt("height",mediaProjectionActivity.heght);
-            int videoBitrate=sharedPreferences.getInt("videoBitrate",16777216);
-            int videoFrameRate=sharedPreferences.getInt("videoFrameRate",24);
+        void reloadUI(){
+            if (isConnect){
+                if (myBinder.getServerStatus()==MediaReaderService.START_SERVER) {
+                    mediaProjectionActivity.buttonstart.setText(R.string.app_but_stop);
+                }else {
+                    mediaProjectionActivity.buttonstart.setText(R.string.app_but_shar);
+                }
+                mediaProjectionActivity.buttonstart.setEnabled(true);
+            }else {
+                reConnect();
+                task.add(()->{
+                    reloadUI();
+                });
+            }
 
-            myBinder.setVideoParam(localwidth,localheight,
-                    videoBitrate,videoFrameRate);
         }
-        public void closeServer(){
-            myBinder.stopServer();
+        void stopShare(){
+            if (isConnect){
+                myBinder.stopShare();
+            }else {
+                reConnect();
+                task.add(()->{
+                    stopShare();
+                });
+            }
+        }
+
+        void startShare(){
+            if (isConnect){
+                myBinder.startShare();
+            }else {
+                reConnect();
+                task.add(()->{
+                    startShare();
+                });
+            }
+        }
+
+        void reConnect(){
+            Intent intent = new Intent(MediaProjectionActivity.this,MediaReaderService.class);
+            mediaProjectionActivity.bindService(intent,this,Context.BIND_AUTO_CREATE);
+        }
+
+        void unBind(){
+            if (isConnect)mediaProjectionActivity.unbindService(this);
         }
 
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             myBinder=(MediaReaderService.MyBinder) service;
-            setParam();
+            isConnect=true;
+
+            for (Runnable i:task){
+                i.run();
+            }
+
         }
+
         @Override
         public void onServiceDisconnected(ComponentName name) {
-
+            isConnect=false;
         }
 
         @Override
@@ -253,7 +261,6 @@ public class MediaProjectionActivity extends AppCompatActivity implements View.O
         public void onNullBinding(ComponentName name) {
 
         }
-
     }
 
 }

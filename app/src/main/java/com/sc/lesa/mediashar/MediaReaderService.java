@@ -7,70 +7,72 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-
-import android.media.AudioFormat;
-import android.media.projection.MediaProjection;
 import android.os.Binder;
 import android.os.Build;
+import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-
 import com.sc.lesa.mediashar.jlib.P.VideoSender;
 import com.sc.lesa.mediashar.jlib.P.VoiceSender;
-import com.sc.lesa.mediashar.jlib.media.AacFormat;
-import com.sc.lesa.mediashar.jlib.os.HandlerThread;
 import com.sc.lesa.mediashar.jlib.server.SocketServerThread;
-
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 
 public class MediaReaderService extends Service {
+	private static final String TAG = MediaReaderService.class.getSimpleName();
 
-	boolean serverFlag = false;
+	int serverStatus=STOP_SERVER;
 
-	final static String START_SERVER_BEGIN="START_SERVER_BEGIN";
+	final static String START_SERVER_SHARE="START_SERVER_BEGIN";
+	final static String STOP_SERVER_SHARE="STOP_SERVER_SHARE";
+
 	public final static int START_SERVER=1;
 	public final static int STOP_SERVER=2;
 
 	private final int NOTIFICATION_ID_ICON  = 1;
 	private static final String UNLOCK_NOTIFICATION_CHANNEL_ID = "unlock_notification";
 
-	private static final String TAG = MediaReaderService.class.getSimpleName();
 
-	HandlerThread handler =new HandlerThread(){
-		@Override
-		public void handleMessage(Message msg) {
-			if (msg.what==START_SERVER){
-				stratSendServer();
-			}else if (msg.what==STOP_SERVER){
-				stopServer();
-			}
-		}
-	};
+	ExecutorService executorService  = Executors.newSingleThreadExecutor();
 
 	SocketServerThread socketServerThread;
 	VideoSender videoSender;
 	VoiceSender voiceSender;
-	static MediaProjection mediaProjection;
+
 	private final IBinder mBinder = new MyBinder(this);
+	private Handler handler = new Handler();
 
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		initNotificationChannel();
-		handler.start();
   		Log.d(TAG, "onCreate()");
 	}
 
 	private void stratSendServer(){
-
-		buildNotification(R.mipmap.ic_launcher,getString(R.string.app_name),getString(R.string.app_title_runing));
+		serverStatus=START_SERVER;
+		handler.post(()->{
+			buildNotification(R.mipmap.ic_launcher,getString(R.string.app_name),getString(R.string.app_title_runing));
+		});
 		socketServerThread = new SocketServerThread(9090);
 		socketServerThread.start();
-		videoSender = new VideoSender(socketServerThread,this,mediaProjection);
-		voiceSender =new VoiceSender(socketServerThread,this);
+		Config config = Config.Companion.getConfig(this);
+		try {
+			videoSender = new VideoSender(socketServerThread, MyApplication.getMediaProjection(),
+					config.getWidth(),config.getHeight(),
+					config.getVideoBitrate(),config.getVideoFrameRate()
+			);
+		}catch (Throwable throwable){
+			throwable.printStackTrace();
+			System.exit(1);
+		}
+		voiceSender =new VoiceSender(socketServerThread,
+				config.getChannelMode(),config.getEncodeFormat(),config.getChannelCount(),
+				config.getVoiceByteRate(),config.getVoiceSampleRate()
+		);
 
 	}
 
@@ -78,20 +80,14 @@ public class MediaReaderService extends Service {
 		videoSender.close();
 		voiceSender.exit();
 		socketServerThread.exit();
-		handler.exit();
-		deleteNotification();
-		serverFlag=false;
+		handler.post(()->{
+			deleteNotification();
+		});
+		serverStatus=STOP_SERVER;
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
-		String flag = intent.getStringExtra(START_SERVER_BEGIN);
-		if (flag!=null){
-			if (!serverFlag) {
-				handler.hasMessages(START_SERVER);
-				serverFlag=true;
-			}
-		}
 		return START_STICKY;
 	}
 
@@ -139,7 +135,7 @@ public class MediaReaderService extends Service {
 				.setContentText(contenttext)
 				.setSmallIcon(resId);
 
-		Intent notifyIntent = new Intent(this, MediaReaderService.class);
+		Intent notifyIntent = new Intent(this, MediaProjectionActivity.class);
 		PendingIntent notifyPendingIntent = PendingIntent.getActivity(this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 		builder.setContentIntent(notifyPendingIntent);
 
@@ -175,39 +171,31 @@ public class MediaReaderService extends Service {
 			mediaReaderService=m;
 		}
 
-		public void setVideoParam(int width,int height,int videoBitrate,int videoFrameRate){
-			VideoSender.setParam(mediaReaderService,width,height,videoBitrate,videoFrameRate);
+
+		public int getServerStatus(){
+			return mediaReaderService.serverStatus;
 		}
 
-		/**
-		 *
-		 * @param ChannelMode {@link AudioFormat#CHANNEL_IN_MONO} 或 {@link AudioFormat#CHANNEL_IN_STEREO}
-		 * @param EncodeFormat {@link AudioFormat#ENCODING_PCM_16BIT}
-		 * @param ChannelCount {@link AacFormat#ChannleOutOne}
-		 * @param ByteRate {@link AacFormat#ByteRate256Kbs}
-		 * @param SampleRate {@link AacFormat#SampleRate44100}
-		 */
-		public void setVoiceParam(int ChannelMode,int EncodeFormat,
-								  int ChannelCount,int ByteRate,int SampleRate){
-			VoiceSender.setParam(mediaReaderService, ChannelMode, EncodeFormat,
-			 ChannelCount,ByteRate,SampleRate);
+		public void stopShare(){
+			if (getServerStatus()==START_SERVER) {
+				mediaReaderService.executorService.execute(() -> {
+					stopServer();
+				});
+			}
 		}
 
-		public boolean getServerStatus(){
-			return mediaReaderService.serverFlag;
-		}
+		public void startShare(){
+			if (getServerStatus()==STOP_SERVER) {
+				mediaReaderService.executorService.execute(()->{
+					stratSendServer();
+				});
+			}
 
-		public void stopServer(){
-			mediaReaderService.handler.hasMessages(STOP_SERVER);
 		}
 
 	}
 
-	public static Intent startServer(Intent intent,MediaProjection mp){
-		mediaProjection=mp;
-		intent.putExtra(START_SERVER_BEGIN,START_SERVER_BEGIN);
-		return intent;
-	}
+
 
 }
 

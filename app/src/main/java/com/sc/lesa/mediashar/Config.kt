@@ -3,6 +3,7 @@ package com.sc.lesa.mediashar
 import android.content.Context
 import android.media.AudioFormat
 import com.sc.lesa.mediashar.jlib.media.AacFormat
+import com.sc.lesa.mediashar.jlib.util.AtomicBoolean
 
 class Config(var width:Int,
              var height:Int,
@@ -31,10 +32,12 @@ class Config(var width:Int,
         private val VOICEBYTERATE = "VoiceByteRate"
         private val VOICESAMPLERATE = "VoiceSampleRate"
 
+        private val atomlock=AtomicBoolean(false)
 
         private var config: Config? = null
 
         fun getConfig(context: Context): Config {
+            atomlock.weakCompareAndSet(false,true)
             if (config == null) {
                 val sp = context.getSharedPreferences(CONFIGNAME, Context.MODE_PRIVATE)
                 config = Config(
@@ -50,11 +53,12 @@ class Config(var width:Int,
                         sp.getInt(VOICESAMPLERATE,AacFormat.SampleRate44100)
                 )
             }
+            atomlock.set(false)
             return config as Config
-
         }
 
         fun saveConfig(context: Context,config: Config){
+            atomlock.weakCompareAndSet(false,true)
             Config.config=config
 
             val sp = context.getSharedPreferences(CONFIGNAME, Context.MODE_PRIVATE)
@@ -72,6 +76,7 @@ class Config(var width:Int,
             edit.putInt(VOICESAMPLERATE,config.voiceSampleRate)
 
             edit.apply()
+            atomlock.set(false)
         }
 
 

@@ -1,7 +1,6 @@
 package com.sc.lesa.mediashar.jlib.P;
 
-import android.content.Context;
-import android.content.SharedPreferences;
+
 import android.media.projection.MediaProjection;
 import android.util.Log;
 
@@ -15,44 +14,42 @@ public class VideoSender implements Encoder.EncoderListener {
     final String TAG =VideoSender.class.getName();
 
     SocketServerThread socketServerThread;
-    Context context;
+
     int width;
     int height;
     int videoBitrate;
     int videoFrameRate;
 
     MediaReader mediaReader;
-    public VideoSender(SocketServerThread st, Context context, MediaProjection mp){
-        socketServerThread=st;
-        this.context=context;
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                "videoparm",Context.MODE_PRIVATE);
 
-        this.width=sharedPreferences.getInt("width",1920);
-        this.height=sharedPreferences.getInt("height",1080);
-        this.videoBitrate=sharedPreferences.getInt("videoBitrate",16777216);
-        this.videoFrameRate=sharedPreferences.getInt("videoFrameRate",24);
+    /**
+     *
+     * @param st 发送线程
+     * @param mp  MediaProjection
+     * @param width 视频宽度 1080
+     * @param height 视频高度 1920
+     * @param videoBitrate 视频 比特率  16777216
+     * @param videoFrameRate 视频 帧率 24
+     */
+    public VideoSender(SocketServerThread st, MediaProjection mp,
+                       int width,int height,
+                       int videoBitrate,int videoFrameRate
+    ){
+
+        socketServerThread=st;
+        this.width=width;
+        this.height=height;
+        this.videoBitrate=videoBitrate;
+        this.videoFrameRate=videoFrameRate;
 
         this.mediaReader =new MediaReader(width,height,videoBitrate,
                 videoFrameRate,this,mp);
         mediaReader.startEncode();
     }
 
-    public static void setParam(Context context,int width,int height,int videoBitrate,int videoFrameRate){
-        SharedPreferences sharedPreferences = context.getSharedPreferences(
-                "videoparm",Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt("width",width);
-        editor.putInt("height",height);
-        editor.putInt("videoBitrate",videoBitrate);
-        editor.putInt("videoFrameRate",videoFrameRate);
-        editor.commit();
-
-    }
-
     @Override
     public void onH264(byte[] buffer, int type, long ts) {
-
+        //Log.d(TAG,"h264 encode :"+buffer.length);
         byte[] datas=new byte[buffer.length];
         System.arraycopy(buffer,0,datas,0,buffer.length);
         VideoPack pack = new VideoPack(datas,width,height,videoBitrate,
@@ -70,7 +67,6 @@ public class VideoSender implements Encoder.EncoderListener {
     public void onCloseH264() {
         mediaReader.quit();
         mediaReader=null;
-        context=null;
         socketServerThread=null;
         Log.d(TAG,"退出完成");
     }
