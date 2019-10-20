@@ -67,7 +67,7 @@ public class Decoder {
             }
             Log.e("Media", "onFrame end");
             return true;
-        }catch (Exception e){
+        }catch (Throwable e){
             Log.e("Media", "onFrame faile");
             e.printStackTrace();
             return false;

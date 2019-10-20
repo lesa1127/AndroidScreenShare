@@ -1,6 +1,5 @@
 package com.sc.lesa.mediashar.jlib.util;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class TempBufferList<T> extends BufferList<T> {
 
@@ -10,13 +9,7 @@ public class TempBufferList<T> extends BufferList<T> {
 
 
     public void setLock(){
-
-        if(atomicBoolean.compareAndSet(false,true)){
-            return;
-        }else {
-            while (atomicBoolean.compareAndSet(false,true)==false);
-            return;
-        }
+        atomicBoolean.weakCompareAndSet(false,true);
     }
     public void unLock(){
         atomicBoolean.set(false);

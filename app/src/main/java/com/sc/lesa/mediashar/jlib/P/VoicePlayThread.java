@@ -87,7 +87,7 @@ public class VoicePlayThread extends Thread implements AACDecoder.OnDecodeDone {
     }
 
     @Override
-    public void close() {
+    public void onClose() {
 
     }
 

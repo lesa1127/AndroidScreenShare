@@ -19,9 +19,9 @@ public class AACDecoder{
     private OnDecodeDone onDecodeDone;
 
 
-    private int KEY_CHANNEL_COUNT=1; //声道数
-    private int KEY_SAMPLE_RATE=44100;//采样频率
-    private int KEY_BIT_RATE=384000;//比特率
+    private int channelCount=1; //声道数
+    private int sampleRate=44100;//采样频率
+    private int bitRate=384000;//比特率
 
     /**
      *
@@ -35,9 +35,9 @@ public class AACDecoder{
      * {@link AacFormat#SampleRate44100} {@link AacFormat#SampleRate48000}
      */
     public AACDecoder(int ChannelCount, int ByteRate,int SampleRate){
-        this.KEY_CHANNEL_COUNT=ChannelCount;
-        this.KEY_BIT_RATE=ByteRate;
-        this.KEY_SAMPLE_RATE=SampleRate;
+        this.channelCount=ChannelCount;
+        this.bitRate=ByteRate;
+        this.sampleRate=SampleRate;
     }
 
     /**
@@ -68,11 +68,11 @@ public class AACDecoder{
             //数据类型
             mediaFormat.setString(MediaFormat.KEY_MIME, mine);
             //声道个数
-            mediaFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, KEY_CHANNEL_COUNT);
+            mediaFormat.setInteger(MediaFormat.KEY_CHANNEL_COUNT, channelCount);
             //采样率
-            mediaFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, KEY_SAMPLE_RATE);
+            mediaFormat.setInteger(MediaFormat.KEY_SAMPLE_RATE, sampleRate);
             //比特率
-            mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, KEY_BIT_RATE);
+            mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
             //用来标记AAC是否有adts头，1->有
             mediaFormat.setInteger(MediaFormat.KEY_IS_ADTS, 1);
             //用来标记aac的类型
@@ -162,13 +162,13 @@ public class AACDecoder{
             e.printStackTrace();
         }
         if (this.onDecodeDone!=null){
-            this.onDecodeDone.close();
+            this.onDecodeDone.onClose();
             this.onDecodeDone=null;
         }
     }
     public interface OnDecodeDone{
         public void onDecodeData(byte[] bytes,int offset,int len);
-        public void close();
+        public void onClose();
     }
 
 }

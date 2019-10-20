@@ -27,7 +27,8 @@ public class MediaReader  extends Encoder {
     private VirtualDisplay mVirtualDisplay;
 
 
-    public MediaReader(int width, int height,int videoBitrate, int videoFrameRate, EncoderListener encoderListener, MediaProjection mp) {
+    public MediaReader(int width, int height,int videoBitrate, int videoFrameRate,
+                       EncoderListener encoderListener, MediaProjection mp) {
         super(width, height, videoBitrate, videoFrameRate, encoderListener);
         mMediaProjection = mp;
 

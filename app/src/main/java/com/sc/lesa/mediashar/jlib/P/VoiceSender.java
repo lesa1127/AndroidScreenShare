@@ -82,7 +82,7 @@ public class VoiceSender implements AACEncoder.OnEncodeDone , MyAudioRecord.OnDa
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         socketServer=null;
         Log.d(TAG,"退出完成");
     }

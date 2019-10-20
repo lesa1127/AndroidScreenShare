@@ -18,9 +18,9 @@ public class AACEncoder {
     private MediaCodec.BufferInfo mBufferInfo;
     String MIME_TYPE="audio/mp4a-latm";
 
-    private int KEY_CHANNEL_COUNT=1; //声道数
-    private int KEY_SAMPLE_RATE=44100;//采样频率
-    private int KEY_BIT_RATE=384000;//比特率
+    private int channelCount=1; //声道数
+    private int sampleRate=44100;//采样频率
+    private int bitRate=384000;//比特率
     private final int KEY_AAC_PROFILE= MediaCodecInfo.CodecProfileLevel.AACObjectLC;
 
     private byte[] mFrameByte;
@@ -39,9 +39,9 @@ public class AACEncoder {
      */
     public AACEncoder(int ChannelCount, int ByteRate,int SampleRate){
         Log.d(TAG,"ChannelCount:"+ChannelCount+" ByteRate:"+ByteRate+" SampleRate:"+SampleRate);
-        this.KEY_CHANNEL_COUNT=ChannelCount;
-        this.KEY_BIT_RATE=ByteRate;
-        this.KEY_SAMPLE_RATE=SampleRate;
+        this.channelCount=ChannelCount;
+        this.bitRate=ByteRate;
+        this.sampleRate=SampleRate;
     }
 
     public void start(){
@@ -53,8 +53,8 @@ public class AACEncoder {
         try {
             mEncoder = MediaCodec.createEncoderByType(MIME_TYPE);
             MediaFormat mediaFormat = MediaFormat.createAudioFormat(MIME_TYPE,
-                    KEY_SAMPLE_RATE, KEY_CHANNEL_COUNT);
-            mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, KEY_BIT_RATE);
+                    sampleRate, channelCount);
+            mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
             mediaFormat.setInteger(MediaFormat.KEY_AAC_PROFILE,
                     KEY_AAC_PROFILE);
             mEncoder.configure(mediaFormat, null, null,
@@ -91,8 +91,8 @@ public class AACEncoder {
 
             AacAdstUtil.addADTStoPacketType(mFrameByte,AacAdstUtil.TYPE_MEPG_2,AacAdstUtil.UNUSE_CRC,
                     AacAdstUtil.AAC_LC,
-                    (this.KEY_SAMPLE_RATE==AacFormat.SampleRate44100)?AacAdstUtil.SAMPLING_RATE_44_1KHZ:AacAdstUtil.SAMPLING_RATE_48KHZ,
-                    this.KEY_CHANNEL_COUNT,length);
+                    (this.sampleRate==AacFormat.SampleRate44100)?AacAdstUtil.SAMPLING_RATE_44_1KHZ:AacAdstUtil.SAMPLING_RATE_48KHZ,
+                    this.channelCount,length);
             outputBuffer.get(mFrameByte,7,mBufferInfo.size);
 
             if (onEncodeDone!=null)onEncodeDone.onEncodeData(mFrameByte,0,length,
@@ -105,7 +105,7 @@ public class AACEncoder {
 
     public interface OnEncodeDone{
         public void onEncodeData(byte[] bytes,int offset,int len,long ts);
-        public void close();
+        public void onClose();
     }
 
 
@@ -117,7 +117,7 @@ public class AACEncoder {
         mEncoder=null;
         this.mBufferInfo=null;
         if (onEncodeDone!=null){
-            onEncodeDone.close();
+            onEncodeDone.onClose();
             onEncodeDone=null;
         }
     }

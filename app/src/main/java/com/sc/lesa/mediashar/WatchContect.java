@@ -27,7 +27,6 @@ import java.util.Date;
 public class WatchContect extends AppCompatActivity {
 
     private SurfaceView mSurfaceView;
-    private Surface mSurface;
     SurfaceHolder mSurfaceHolder;
 
     String ip;
@@ -66,21 +65,26 @@ public class WatchContect extends AppCompatActivity {
         Intent intent = getIntent();
         ip=intent.getStringExtra("Address");
 
-        new Thread(new Runnable() {
+        mSurfaceHolder.addCallback(new SurfaceHolder.Callback() {
             @Override
-            public void run() {
-                try {
-                    Thread.sleep(1000);
-                    Message msg = new Message();
-                    msg.what = 1;
-                    handler.sendMessage(msg);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            public void surfaceCreated(SurfaceHolder surfaceHolder) {
+                Message msg = new Message();
+                msg.what = 1;
+                handler.sendMessage(msg);
+            }
+
+            @Override
+            public void surfaceChanged(SurfaceHolder surfaceHolder, int i, int i1, int i2) {
 
             }
-        }).start();
+
+            @Override
+            public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
+
+            }
+        });
     }
+
     long preTime;
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -112,7 +116,7 @@ public class WatchContect extends AppCompatActivity {
                     return;
                 }
                 socketClientThread.start();
-                mdiaPlayThread=new VideoPlayThread(getmSurface(),socketClientThread.getClassifier());
+                mdiaPlayThread=new VideoPlayThread(mSurfaceHolder.getSurface(),socketClientThread.getClassifier());
                 mdiaPlayThread.start();
                 voicePlayThread = new VoicePlayThread(socketClientThread.getClassifier());
                 voicePlayThread.start();
@@ -121,13 +125,7 @@ public class WatchContect extends AppCompatActivity {
         thread.start();
     }
 
-    public  Surface getmSurface(){
-        mSurface = mSurfaceHolder.getSurface();
-        return mSurface;
-    }
-
     public static Intent buildIntent(Intent intent,String ip){
-
         intent.putExtra("Address",ip);
         return intent;
     }

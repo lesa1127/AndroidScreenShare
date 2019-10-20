@@ -41,7 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         dialogView = LayoutInflater.from(MainActivity.this)
                 .inflate(R.layout.dialo_inputadreass,null);
+
         buildDialog();
+
         if (Build.VERSION.SDK_INT>Build.VERSION_CODES.M) {
             CheckAndSetPermissions(this);
         }
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         alertInputDialog = inputDialog.create();
 
     }
+
     @Override
     public void onClick(View v) {
         int id = v.getId();
