@@ -17,7 +17,7 @@
         android:layout_marginBottom="25dp"
         android:background="@drawable/btn_bg_a"
         android:onClick="onClick"
-        android:text="@string/app_but_share"
+        android:text="@string/app_but_shar"
         android:textSize="18sp" />
 
     <Button

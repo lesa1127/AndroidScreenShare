@@ -29,4 +29,14 @@
 
     <string name="app_title_runing">正在运行</string>
 
+    <string name="error_save">保存错误</string>
+    <string name="error_channel_count">声道设置错误</string>
+
+    <string name="title_input_ipaddr">请输入连接地址</string>
+    <string name="but_ok">确定</string>
+    <string name="but_cancle">取消</string>
+
+    <string name="server_error_start">服务开启失败</string>
+
+    <string name="error">错误</string>
 </resources>

@@ -1,40 +1,51 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/background_light"
-    tools:context=".MediaProjectionActivity">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <import type="com.sc.lesa.mediashar.MediaProjectionActivity.ViewModel"/>
+        <variable
+            name="model"
+            type="ViewModel" />
+    </data>
 
-    <com.sc.lesa.mediashar.view.MyLineLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:background="@android:color/background_light"
+        tools:context=".MediaProjectionActivity">
 
-        <Button
-            android:id="@+id/but_server_start"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:layout_marginBottom="25dp"
-            android:background="@drawable/btn_bg_a"
-            android:onClick="onClick"
-            android:text="@string/app_but_shar"
-            android:textSize="18sp" />
 
-        <Button
-            android:id="@+id/but_server_setting"
-            android:layout_width="160dp"
-            android:layout_height="160dp"
-            android:layout_marginLeft="25dp"
-            android:layout_marginRight="25dp"
-            android:background="@drawable/btn_bg_b"
-            android:onClick="onClick"
-            android:textSize="18sp"
-            android:text="@string/app_but_rec" />
+        <com.sc.lesa.mediashar.view.MyLineLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
 
-    </com.sc.lesa.mediashar.view.MyLineLayout>
-</FrameLayout>
+            <Button
+                android:enabled="@{model.buttonenable}"
+                android:id="@+id/but_server_start"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:layout_marginBottom="25dp"
+                android:background="@drawable/btn_bg_a"
+                android:onClick="onClick"
+                android:text="@{model.buttontext}"
+                android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/but_server_setting"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="25dp"
+                android:background="@drawable/btn_bg_b"
+                android:onClick="onClick"
+                android:textSize="18sp"
+                android:text="@string/app_but_rec" />
+
+        </com.sc.lesa.mediashar.view.MyLineLayout>
+    </FrameLayout>
+</layout>

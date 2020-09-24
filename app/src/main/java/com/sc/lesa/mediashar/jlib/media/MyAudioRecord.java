@@ -42,8 +42,16 @@ public class MyAudioRecord extends Thread {
         this.mSampleRate=sampleRateInHz;
         this.mChannelMode=channelConfig;
         this.mEncodeFormat=audioFormat;
-        init();
+
     }
+
+    public void init(){
+        int minBufferSize = AudioRecord.getMinBufferSize(mSampleRate, mChannelMode,
+                mEncodeFormat);
+        mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
+                mSampleRate, mChannelMode, mEncodeFormat, minBufferSize * 2);
+    }
+
     public void setOnDataInput(OnDataInput onDataInput){
         this.mOnDataInput = onDataInput;
     }
@@ -64,12 +72,6 @@ public class MyAudioRecord extends Thread {
         Log.d(TAG, "clean up");
     }
 
-    private void init(){
-        int minBufferSize = AudioRecord.getMinBufferSize(mSampleRate, mChannelMode,
-                mEncodeFormat);
-        mAudioRecord = new AudioRecord(MediaRecorder.AudioSource.MIC,
-                mSampleRate, mChannelMode, mEncodeFormat, minBufferSize * 2);
-    }
 
     private void distory(){
         mAudioRecord.stop();

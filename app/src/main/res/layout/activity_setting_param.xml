@@ -1,149 +1,161 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.sc.lesa.mediashar.view.MyLineLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:context=".SettingParam">
+    xmlns:tools="http://schemas.android.com/tools">
 
+    <data>
+        <import type="com.sc.lesa.mediashar.config.Config"/>
+        <variable
+            name="config"
+            type="Config" />
+    </data>
 
-    <TextView
-        android:id="@+id/textView"
+    <android.support.constraint.ConstraintLayout
+        tools:background="#202525"
+        tools:context=".SettingParam"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/app_input_width"
-        android:textColor="@android:color/background_light" />
+        android:layout_height="match_parent">
 
-    <EditText
-        android:id="@+id/setting_editText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:background="@drawable/editsharp"
-        android:ems="10"
-        android:inputType="number"
-        android:text="1920"
-        android:textColor="@android:color/background_light"
-        android:textColorLink="@android:color/background_light" />
+        <com.sc.lesa.mediashar.view.MyLineLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"/>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:textColor="@android:color/background_light"
-        android:text="@string/app_input_height" />
+        <ScrollView
+            app:layout_constraintBottom_toTopOf="@+id/setting_button"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginBottom="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="0dp">
 
-    <EditText
-        android:id="@+id/setting_editText3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:background="@drawable/editsharp"
-        android:layout_marginRight="10dp"
-        android:textColor="@android:color/background_light"
-        android:ems="10"
-        android:textColorLink="@android:color/background_light"
-        android:inputType="number"
-        android:text="1080" />
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/background_light"
-        android:layout_marginLeft="5dp"
-        android:text="@string/app_input_bytereat" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginTop="20dp"
+                    android:text="@string/app_input_width"
+                    android:textColor="@android:color/background_light" />
 
-    <EditText
-        android:id="@+id/setting_editText4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:ems="10"
-        android:textColor="@android:color/background_light"
-        android:textColorLink="@android:color/background_light"
-        android:inputType="number"
-        android:background="@drawable/editsharp"
-        android:text="16777216" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:background="@drawable/editsharp"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:text="@={config.width}"
+                    android:textColor="@android:color/background_light"
+                    android:textColorLink="@android:color/background_light" />
 
-    <TextView
-        android:id="@+id/textView4"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:textColor="@android:color/background_light"
-        android:text="@string/app_input_fps" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@android:color/background_light"
+                    android:text="@string/app_input_height" />
 
-    <EditText
-        android:id="@+id/setting_editText5"
-        android:layout_width="match_parent"
-        android:textColor="@android:color/background_light"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:ems="10"
-        android:textColorLink="@android:color/background_light"
-        android:inputType="number"
-        android:background="@drawable/editsharp"
-        android:text="24" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:background="@drawable/editsharp"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@android:color/background_light"
+                    android:ems="10"
+                    android:textColorLink="@android:color/background_light"
+                    android:inputType="number"
+                    android:text="@={config.height}" />
 
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/background_light"
-        android:layout_marginLeft="5dp"
-        android:text="@string/app_input_numchannle" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/background_light"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/app_input_bytereat" />
 
-    <EditText
-        android:id="@+id/setting_editText6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:textColor="@android:color/background_light"
-        android:ems="10"
-        android:textColorLink="@android:color/background_light"
-        android:inputType="number"
-        android:background="@drawable/editsharp"
-        android:text="1" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:ems="10"
+                    android:textColor="@android:color/background_light"
+                    android:textColorLink="@android:color/background_light"
+                    android:inputType="number"
+                    android:background="@drawable/editsharp"
+                    android:text="@={config.videoBitrate}" />
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/background_light"
-        android:layout_marginLeft="5dp"
-        android:text="@string/app_input_byterate" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="5dp"
+                    android:textColor="@android:color/background_light"
+                    android:text="@string/app_input_fps" />
 
-    <EditText
-        android:id="@+id/setting_editText7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@android:color/background_light"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:ems="10"
-        android:textColorLink="@android:color/background_light"
-        android:inputType="number"
-        android:background="@drawable/editsharp"
-        android:text="384000" />
+                <EditText
+                    android:layout_width="match_parent"
+                    android:textColor="@android:color/background_light"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:ems="10"
+                    android:textColorLink="@android:color/background_light"
+                    android:inputType="number"
+                    android:background="@drawable/editsharp"
+                    android:text="@={config.videoFrameRate}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/background_light"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/app_input_numchannle" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:textColor="@android:color/background_light"
+                    android:ems="10"
+                    android:textColorLink="@android:color/background_light"
+                    android:inputType="number"
+                    android:background="@drawable/editsharp"
+                    android:text="@={config.channelCount}" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/background_light"
+                    android:layout_marginLeft="5dp"
+                    android:text="@string/app_input_byterate" />
+
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@android:color/background_light"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="10dp"
+                    android:ems="10"
+                    android:textColorLink="@android:color/background_light"
+                    android:inputType="number"
+                    android:background="@drawable/editsharp"
+                    android:text="@={config.voiceByteRate}" />
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="bottom"
-        android:textColor="@android:color/background_light"
-        android:orientation="horizontal">
+            </LinearLayout>
+
+        </ScrollView>
+
 
         <Button
+            app:layout_constraintBottom_toBottomOf="parent"
             android:id="@+id/setting_button"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -153,6 +165,6 @@
             android:background="@drawable/editsharp1"
             android:onClick="onClick"
             android:text="@string/app_but_save_setting" />
-    </LinearLayout>
 
-</com.sc.lesa.mediashar.view.MyLineLayout>
+    </android.support.constraint.ConstraintLayout>
+</layout>

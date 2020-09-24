@@ -1,20 +1,28 @@
 package com.sc.lesa.mediashar.jlib.server
 
 import com.sc.lesa.mediashar.jlib.io.*
-import com.sc.lesa.mediashar.jlib.util.BufferList
-import com.sc.lesa.mediashar.jlib.util.TempBufferList
+import java.util.concurrent.LinkedBlockingQueue
+
 
 class DataPackList {
 
-    private val bufferListVideo: BufferList<Writable> = TempBufferList(120)
-    private val bufferListVoice: BufferList<Writable> = TempBufferList(120)
+    private val bufferListVideo: LinkedBlockingQueue<Writable> = LinkedBlockingQueue(120)
+    private val bufferListVoice: LinkedBlockingQueue<Writable> = LinkedBlockingQueue(120)
 
     fun getVideoPack(): Writable? {
-        return bufferListVideo.lastValue()
+        val tmp = bufferListVideo.peek()
+        tmp?.also {
+            bufferListVideo.remove(it)
+        }
+        return tmp
     }
 
     fun getVoicePack(): Writable? {
-        return bufferListVoice.lastValue()
+        val tmp = bufferListVoice.peek()
+        tmp?.also {
+            bufferListVoice.remove(it)
+        }
+        return tmp
     }
 
 
@@ -23,39 +31,11 @@ class DataPackList {
         val dataPack = DataPack(tmp)
         tmp.close()
         if (dataPack.isVideoPack()){
-            bufferListVideo.push(VideoPack(dataPack.byteArray))
+            bufferListVideo.offer(VideoPack(dataPack.byteArray))
         }else if (dataPack.isVoicePack()){
-            bufferListVoice.push(VoicePack(dataPack.byteArray))
+            bufferListVoice.offer(VoicePack(dataPack.byteArray))
         }
     }
 
-    companion object{
-        fun buildVideoPack(writable:Writable):ByteArray{
-            var out = DataOutputStreamBuffer()
-            writable.write(out)
-            val pack = DataPack(DataPack.TYPE_VIDEO,out.toByteArray())
-            out.close()
 
-            out= DataOutputStreamBuffer()
-            pack.write(out)
-
-            val tmp = out.toByteArray()
-            out.close()
-            return tmp
-        }
-
-        fun buildVoicePack(writable:Writable):ByteArray{
-            var out = DataOutputStreamBuffer()
-            writable.write(out)
-            val pack = DataPack(DataPack.TYPE_VOICE,out.toByteArray())
-            out.close()
-
-            out= DataOutputStreamBuffer()
-            pack.write(out)
-
-            val tmp = out.toByteArray()
-            out.close()
-            return tmp
-        }
-    }
 }

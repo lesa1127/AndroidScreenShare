@@ -35,7 +35,7 @@ public class CombinValue {
     public static short bytesToShort(byte[] bytes){
         short src = 0;
         for (int i = 0; i < bytes.length; i++) {
-            long tmp = ((long) bytes[i] & 0xffl);
+            long tmp = ((long) bytes[i] & 0xffL);
             src |= (tmp<<i*8);
         }
         return src;
@@ -43,7 +43,7 @@ public class CombinValue {
     public static int bytesToInt(byte[] bytes){
         int src = 0;
         for (int i = 0; i < bytes.length; i++) {
-            long tmp = ((long) bytes[i] & 0xffl);
+            long tmp = ((long) bytes[i] & 0xffL);
             src |= (tmp<<i*8);
         }
         return src;
@@ -51,7 +51,7 @@ public class CombinValue {
     public static long bytesToLong(byte[] bytes){
         long src = 0;
         for (int i = 0; i < bytes.length; i++) {
-            long tmp = ((long) bytes[i] & 0xffl);
+            long tmp = ((long) bytes[i] & 0xffL);
             src |= (tmp<<i*8);
         }
         return src;

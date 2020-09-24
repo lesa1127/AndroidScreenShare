@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.sc.lesa.mediashar">
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -17,8 +18,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppTheme"
+        tools:ignore="GoogleAppIndexingWarning">
+        <activity
+            android:launchMode="singleInstance"
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,20 +30,24 @@
             </intent-filter>
         </activity>
         <activity
+            android:launchMode="singleInstance"
             android:name=".MediaProjectionActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="true"
             android:label="@string/app_name"
-            android:theme="@style/FullscreenTheme"></activity>
+            android:theme="@style/FullscreenTheme"/>
 
         <service android:name=".MediaReaderService" />
 
         <activity
+            android:launchMode="singleInstance"
             android:name=".WatchContect"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:label="@string/title_activity_watch_contect"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".SettingParam"></activity>
+        <activity
+            android:launchMode="singleInstance"
+            android:name=".SettingParam"/>
     </application>
 
 </manifest>
