@@ -2,8 +2,6 @@ package com.sc.lesa.mediashar
 
 import android.content.Intent
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import android.support.v7.app.AppCompatActivity
 import android.view.KeyEvent
 import android.view.SurfaceHolder
@@ -106,7 +104,7 @@ class WatchContect : AppCompatActivity(), SurfaceHolder.Callback {
     }
 
     override fun surfaceChanged(holder: SurfaceHolder?, format: Int, width: Int, height: Int) {
-        init()
+
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder?) {
@@ -114,6 +112,7 @@ class WatchContect : AppCompatActivity(), SurfaceHolder.Callback {
     }
 
     override fun surfaceCreated(holder: SurfaceHolder?) {
+        init()
     }
 
 }
